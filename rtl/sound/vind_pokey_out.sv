@@ -96,10 +96,19 @@ module vind_pokey_out
 	wire signed [SW-1:0]  dc_nxt = dc + ((lp_nxt - dc) >>> 15);
 	logic signed [SW-1:0] dc;
 
+	// Reset leaves both states settled at the zero-current level, i.e. C47
+	// already charged to its quiescent point, so the output starts at 0 rather
+	// than stepping to -16384 when the input first reads silence and decaying
+	// over the next ~50 ms.  The sound ROM opens the POKEY volume at /MIX about
+	// 6 ms after reset (82 us after it releases SKCTL), well inside that decay.
+	// This needs POKEY.vhd to put out the zero-sum code (-1024) from reset too;
+	// with either half alone the boot still clicks (tb_vind_jsa_click).
+	localparam signed [SW-1:0] SILENCE_Q16 = -(SW'(16384) <<< 16);
+
 	always_ff @(posedge clk) begin
 		if (reset) begin
-			lp <= '0;
-			dc <= '0;
+			lp <= SILENCE_Q16;
+			dc <= SILENCE_Q16;
 		end else if (ce) begin
 			lp <= lp_nxt;
 			dc <= dc_nxt;

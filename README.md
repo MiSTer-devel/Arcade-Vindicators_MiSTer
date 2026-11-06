@@ -171,15 +171,15 @@ every rate on both PCBs is an integer division of `clk_sys`. There are no
 fractional enables anywhere.
 
 Resource use on the DE10-Nano's Cyclone V (`5CSEBA6U23I7`), for the bitstream in
-`releases/`: **16,169 / 41,910 ALMs (39 %)**, 364 / 553 M10K blocks (66 %),
+`releases/`: **15,966 / 41,910 ALMs (38 %)**, 364 / 553 M10K blocks (66 %),
 2.79 / 5.66 Mbit of block memory (49 %), 59 / 112 DSP blocks (53 %). Quartus
 17.0.2 with multi-corner analysis on: **every slack entry positive, TNS 0.000
 on every clock and every check** (setup, hold, recovery, removal) across all
 144 analysed corner/check combinations. The game logic has margin (`clk_sys`
-setup +2.02 ns; the SDRAM pins +8.3 ns setup and +2.0 ns hold, with every SDRAM
+setup +2.09 ns; the SDRAM pins +8.3 ns setup and +2.1 ns hold, with every SDRAM
 address, command and data register in an I/O cell so that timing does not move
 between builds); the tightest paths in the design are in the MiSTer framework's
-HDMI scaler on the HDMI PLL clock, at +0.41 ns setup and +0.07 ns hold. Those
+HDMI scaler on the HDMI PLL clock, at +0.44 ns setup and +0.07 ns hold. Those
 paths are placement-sensitive, which is why `Vindicators.qsf` pins the fitter
 seed; re-check timing if you change it. On this netlist Quartus 17.0.2's fitter
 crashes with an access violation during physical synthesis for seed 3; seeds
@@ -220,7 +220,11 @@ their own focused bench.
 
 **Sound** — the JSA I board is compared to MAME: the 6502's I/O accesses and
 the YM2151 register stream in order and in value, the SCOM command / response
-handshake, the POKEY output stage and the analogue mixer's gain law.
+handshake, the POKEY output stage and the analogue mixer's gain law. The
+whole board is also run on the real sound ROM at the core's real clock rate
+from power-on and through a sound-CPU reset, and must stay exactly silent
+while the 6502 initialises the chips, as MAME does, and then play a sound
+command through the POKEY.
 
 **Memory path** — every ROM region is reproducible by hash from a MAME archive,
 and the MRA byte stream is proved to reconstruct the download image; every
