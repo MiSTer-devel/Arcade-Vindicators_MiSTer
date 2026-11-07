@@ -66,7 +66,7 @@ refuses to lock, that is the first thing to check.
 
 ## Installation
 
-1. Copy `releases/Vindicators_YYYYMMDD.rbf` to `_Arcade/cores/` on the SD card.
+1. Copy `releases/Arcade-Vindicators_YYYYMMDD.rbf` to `_Arcade/cores/` on the SD card.
 2. Copy `releases/Vindicators.mra` to `_Arcade/`, and any wanted alternates from
    `releases/_alternatives/` to `_Arcade/_alternatives/`.
 3. Place the matching MAME ROM archive (`vindictr.zip`, etc.) in `games/mame/`.
@@ -349,8 +349,10 @@ or from a shell:
 quartus_sh --flow compile Vindicators
 ```
 
-The bitstream lands in `output_files/Vindicators.rbf`, already named for the
-`<rbf>Vindicators</rbf>` the MRAs ask for, so there is no rename step.
+The bitstream lands in `output_files/Vindicators.rbf`. Releases ship it as
+`releases/Arcade-Vindicators_YYYYMMDD.rbf`, the MiSTer-devel arcade naming; the
+MiSTer distribution strips the `Arcade-` prefix, and the main menu also finds
+either name from the MRAs' `<rbf>Vindicators</rbf>`.
 
 Source files are listed in `files.qip`, which Quartus reads but cannot edit —
 add and remove entries by hand. **Never add files through the Quartus GUI**: it
